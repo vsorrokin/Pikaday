@@ -8,32 +8,32 @@
 {
     'use strict';
 
-    var moment;
+    var dayjs;
     if (typeof exports === 'object') {
         // CommonJS module
-        // Load moment.js as an optional dependency
-        try { moment = require('moment'); } catch (e) {}
-        module.exports = factory(moment);
+        // Load dayjs.js as an optional dependency
+        try { dayjs = require('dayjs'); } catch (e) {}
+        module.exports = factory(dayjs);
     } else if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(function (req)
         {
-            // Load moment.js as an optional dependency
-            var id = 'moment';
-            try { moment = req(id); } catch (e) {}
-            return factory(moment);
+            // Load dayjs.js as an optional dependency
+            var id = 'dayjs';
+            try { dayjs = req(id); } catch (e) {}
+            return factory(dayjs);
         });
     } else {
-        root.Pikaday = factory(root.moment);
+        root.Pikaday = factory(root.dayjs);
     }
-}(this, function (moment)
+}(this, function (dayjs)
 {
     'use strict';
 
     /**
      * feature detection and helper functions
      */
-    var hasMoment = typeof moment === 'function',
+    var hasDayjs = typeof dayjs === 'function',
 
     hasEventListeners = !!window.addEventListener,
 
@@ -216,7 +216,7 @@
         // default ISO 8601, week 01 is the week with the first Thursday (4)
         firstWeekOfYearMinDays: 4,
 
-        // the default flag for moment's strict date parsing
+        // the default flag for dayjs's strict date parsing
         formatStrict: false,
 
         // the minimum/earliest date that can be selected
@@ -379,7 +379,7 @@
 
     renderWeek = function (d, m, y, firstWeekOfYearMinDays) {
         var date = new Date(y, m, d),
-            week = hasMoment ? moment(date).isoWeek() : isoWeek(date, firstWeekOfYearMinDays);
+            week = hasDayjs ? dayjs(date).isoWeek() : isoWeek(date, firstWeekOfYearMinDays);
 
         return '<td class="pika-week">' + week + '</td>';
     },
@@ -575,8 +575,8 @@
         {
             if (opts.parse) {
                 return opts.parse(opts.field.value, opts.format);
-            } else if (hasMoment) {
-                var date = moment(opts.field.value, opts.format, opts.formatStrict);
+            } else if (hasDayjs) {
+                var date = dayjs(opts.field.value, opts.format, opts.formatStrict);
                 return (date && date.isValid()) ? date.toDate() : null;
             } else {
                 return new Date(Date.parse(opts.field.value));
@@ -769,7 +769,7 @@
         },
 
         /**
-         * return a formatted string of the current selection (using Moment.js if available)
+         * return a formatted string of the current selection (using Dayjs.js if available)
          */
         toString: function(format)
         {
@@ -780,26 +780,26 @@
             if (this._o.toString) {
               return this._o.toString(this._d, format);
             }
-            if (hasMoment) {
-              return moment(this._d).format(format);
+            if (hasDayjs) {
+              return dayjs(this._d).format(format);
             }
             return this._d.toDateString();
         },
 
         /**
-         * return a Moment.js object of the current selection (if available)
+         * return a Dayjs.js object of the current selection (if available)
          */
-        getMoment: function()
+        getDayjs: function()
         {
-            return hasMoment ? moment(this._d) : null;
+            return hasDayjs ? dayjs(this._d) : null;
         },
 
         /**
-         * set the current selection from a Moment.js object (if available)
+         * set the current selection from a Dayjs.js object (if available)
          */
-        setMoment: function(date, preventOnSelect)
+        setDayjs: function(date, preventOnSelect)
         {
-            if (hasMoment && moment.isMoment(date)) {
+            if (hasDayjs && dayjs.isDayjs(date)) {
                 this.setDate(date.toDate(), preventOnSelect);
             }
         },
