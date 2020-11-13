@@ -177,6 +177,9 @@
      */
     defaults = {
 
+        // Datepicker or monthpicker
+        mode: 'date',
+
         // bind the picker to a form field
         field: null,
 
@@ -468,6 +471,14 @@
 
     renderTable = function(opts, data, randId)
     {
+        if (opts.mode === 'month') {
+            return `
+              <div class="pikaday-choose">
+                <button type="button" class="btn" data-action="choose">Выбрать</button>
+              </div>
+            `;
+        }
+
         return '<table cellpadding="0" cellspacing="0" class="pika-table" role="grid" aria-labelledby="' + randId + '">' + renderHead(opts) + renderBody(data) + '</table>';
     },
 
@@ -636,6 +647,16 @@
             if (!target) {
                 return;
             }
+
+            if (target.dataset.action === 'choose') {
+                var month = self.el.querySelector('.pika-select-month');
+                var year = self.el.querySelector('.pika-select-year');
+                var date = new Date(`${+month.value + 1}/15/${year.value}`);
+                self.setDate(date);
+                self.hide();
+                return;
+            }
+
             if (!hasEventListeners && hasClass(target, 'pika-select')) {
                 if (!target.onchange) {
                     target.setAttribute('onchange', 'return;');
