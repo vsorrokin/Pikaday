@@ -177,6 +177,8 @@
      */
     defaults = {
 
+        manualFormat: 'DD.MM.YY',
+
         // Datepicker or monthpicker
         mode: 'date',
 
@@ -587,7 +589,7 @@
             if (opts.parse) {
                 return opts.parse(opts.field.value, opts.format);
             } else if (hasDayjs) {
-                var date = dayjs(opts.field.value, opts.format, opts.formatStrict);
+                var date = dayjs(opts.field.value, opts.manualFormat, opts.formatStrict);
                 return (date && date.isValid()) ? date.toDate() : null;
             } else {
                 return new Date(Date.parse(opts.field.value));
